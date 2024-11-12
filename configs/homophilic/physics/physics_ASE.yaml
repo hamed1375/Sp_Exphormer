@@ -1,0 +1,57 @@
+out_dir: results
+metric_best: accuracy
+gpu_mem: True
+wandb:
+  use: True
+  project: physics3
+  entity: expand-gnns
+dataset:
+  format: PyG-Coauthor
+  name: physics
+  task: node
+  task_type: classification
+  transductive: True
+  node_encoder: True
+  node_encoder_name: LinearNode
+  node_encoder_bn: False
+  edge_encoder: True
+  edge_encoder_num_types: 3
+  edge_encoder_name: TypeDictEdge2
+  edge_encoder_bn: False
+  split_mode: 'random'
+  split: [0.6, 0.2, 0.2]
+prep:
+  exp: True
+  exp_deg: 15
+train:
+  mode: custom_train
+  ckpt_best: True
+  save_attention_scores: True
+  eval_period: 1
+  ckpt_period: 100
+  temp_rdc_ratio: 0.99
+  temp_min: 0.05
+  temp_wait: 5
+model:
+  type: Exphormer
+  loss_fun: cross_entropy
+gt:
+  layer_type: ASE
+  layers: 4
+  n_heads: 1
+  dim_hidden: 4 
+  dropout: 0.0
+  layer_norm: True
+  batch_norm: False
+gnn:
+  head: default
+  layers_pre_mp: 1
+  layers_post_mp: 1 
+optim:
+  clip_grad_norm: True
+  optimizer: adamW
+  weight_decay: 1e-3
+  base_lr: 0.01
+  max_epoch: 200
+  scheduler: cosine_with_warmup
+  num_warmup_epochs: 5

@@ -1,0 +1,52 @@
+out_dir: results
+metric_best: accuracy
+wandb:
+  use: True
+  project: photo3
+  entity: expand-gnns
+dataset:
+  format: PyG-Amazon
+  name: photo
+  task: node
+  task_type: classification
+  transductive: True
+  node_encoder: True
+  node_encoder_name: LinearNode
+  node_encoder_bn: False
+  edge_encoder: True
+  edge_encoder_num_types: 3
+  edge_encoder_name: TypeDictEdge2
+  edge_encoder_bn: False
+  split_mode: 'standard'
+prep:
+  exp: False
+train:
+  mode: custom_with_sampling
+  spexphormer_sampler: graph_reservoir # options: [graph_reservoir, batch_reservoir, graph_uniform, batch_uniform]
+  batch_size: 10000
+  eval_period: 1
+  ckpt_period: 100
+  edge_sample_num_neighbors: [5, 5, 5, 5]
+model:
+  type: Exphormer
+  loss_fun: cross_entropy
+gt:
+  layer_type: Spexphormer
+  layers: 4
+  n_heads: 2
+  dim_hidden: 56
+  dropout: 0.5
+  layer_norm: False
+  batch_norm: True
+gnn:
+  head: inductive_node
+  layers_pre_mp: 1
+  layers_post_mp: 1
+optim:
+  clip_grad_norm: True
+  optimizer: adamW
+  weight_decay: 1e-3
+  base_lr: 0.01
+  max_epoch: 100
+  scheduler: cosine_with_warmup
+  num_warmup_epochs: 5
